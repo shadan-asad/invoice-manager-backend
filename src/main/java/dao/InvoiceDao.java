@@ -110,6 +110,16 @@ public class InvoiceDao {
 			return isUpdated;
 		}
 	}
+	
+	public boolean deleteInvoice(int sl_no) throws SQLException {
+		boolean isRowDeleted;
+		try(Connection con = getConnection();
+				PreparedStatement prepStmt = con.prepareStatement(DELETE_SQL);) {
+			prepStmt.setInt(1, sl_no);
+			isRowDeleted = prepStmt.executeUpdate() > 0;
+		}
+		return isRowDeleted;
+	}
 }
 
 

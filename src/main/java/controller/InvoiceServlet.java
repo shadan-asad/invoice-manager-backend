@@ -63,9 +63,19 @@ public class InvoiceServlet extends HttpServlet {
 			break;
 			
 		case "/edit":
+			try {
+				editInvoice(request, response);
+			} catch (ServletException | IOException | SQLException e) {
+				e.printStackTrace();
+			}
 			break;
 			
 		case "/delete":
+			try {
+				deleteInvoice(request, response);
+			} catch (ServletException | IOException | SQLException e) {
+				e.printStackTrace();
+			}
 			break;
 			
 		default:
@@ -103,6 +113,17 @@ public class InvoiceServlet extends HttpServlet {
 		 invoiceDao.fetchInvoice();
 	 }
 	 
+	 private void editInvoice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		 int sl_no = Integer.parseInt(request.getParameter("sl_no"));
+		 String invoice_currency = request.getParameter("invoice_currency");
+		 String cust_payment_terms = request.getParameter("cust_payment_terms");
+		 
+		 invoiceDao.editInvoice(sl_no, invoice_currency, cust_payment_terms);
+	 }
 	 
+	 private void deleteInvoice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		 int sl_no = Integer.parseInt(request.getParameter("sl_no"));
+		 invoiceDao.deleteInvoice(sl_no);
+	 }
 
 }

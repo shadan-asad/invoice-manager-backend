@@ -77,6 +77,7 @@ public class InvoiceServlet extends HttpServlet {
 	}
 	
 	 private void insertInvoice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		 
 		 String business_code = request.getParameter("business_code");
 		 int cust_number = Integer.parseInt(request.getParameter("cust_number"));
 		 Date clear_date = Date.valueOf(request.getParameter("clear_date"));

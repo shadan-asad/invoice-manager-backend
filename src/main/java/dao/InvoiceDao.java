@@ -26,9 +26,9 @@ public class InvoiceDao {
 			+ " total_open_amount, baseline_create_date, cust_payment_terms, invoice_id, sl_no) VALUES"
 			+ " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	
-	private static final String SELECT_SQL = "SELECT * FROM winter_internship";
+	private static final String SELECT_SQL = "SELECT * FROM winter_internship WHERE is_deleted = 0";
 	private static final String UPDATE_SQL = "UPDATE winter_internship SET invoice_currency = ?, cust_payment_terms = ? WHERE sl_no = ?;";
-	private static final String DELETE_SQL = "DELETE FROM winter_internship WHERE sl_no = ?;";
+	private static final String DELETE_SQL = "UPDATE winter_internship SET is_deleted = 1 WHERE sl_no = ?;";
 	
 	protected Connection getConnection() {
 		Connection con = null;
@@ -63,7 +63,7 @@ public class InvoiceDao {
 			prepStmt.setString(14, invoice.getCust_payment_terms());
 			prepStmt.setInt(15, invoice.getInvoice_id());
 			
-			prepStmt.setInt(16, 48582);
+			prepStmt.setInt(16, 48592);
 			
 			if (prepStmt.executeUpdate() > 0) {
 				return true;
@@ -126,12 +126,14 @@ public class InvoiceDao {
 		}
 	}
 	
-	public boolean deleteInvoice(int sl_no) throws SQLException {
-		boolean isRowDeleted;
-		try(Connection con = getConnection();
-				PreparedStatement prepStmt = con.prepareStatement(DELETE_SQL);) {
-			prepStmt.setInt(1, sl_no);
-			isRowDeleted = prepStmt.executeUpdate() > 0;
+	public boolean deleteInvoice(int[] sl_no) throws SQLException {
+		boolean isRowDeleted = false;
+		try(Connection con = getConnection();) {
+			for(int x : sl_no) {
+				PreparedStatement prepStmt = con.prepareStatement(DELETE_SQL);
+				prepStmt.setInt(1, x);
+				isRowDeleted  = prepStmt.executeUpdate() > 0;
+			}
 		}
 		return isRowDeleted;
 	}

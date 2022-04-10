@@ -49,7 +49,6 @@ public class InvoiceServlet extends HttpServlet {
 			switch(action) {
 			case "/insert":
 				try {
-					System.out.println("insert called");
 					insertInvoice(request, response);
 				} catch (ServletException | IOException | SQLException e) {
 					e.printStackTrace();
@@ -83,7 +82,7 @@ public class InvoiceServlet extends HttpServlet {
 			default:
 				break;
 			}
-			response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.getWriter().append(JSONresponse);
 	}
 
@@ -96,7 +95,6 @@ public class InvoiceServlet extends HttpServlet {
 	}
 	
 	 private void insertInvoice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-		 System.out.println("insertInvoice called");
 		 String business_code = request.getParameter("business_code");
 		 int cust_number = Integer.parseInt(request.getParameter("cust_number"));
 		 String clear_date = toDate(request.getParameter("clear_date"));
@@ -116,27 +114,10 @@ public class InvoiceServlet extends HttpServlet {
 		 Invoice newInvo = new Invoice(business_code, cust_number, clear_date, buisness_year, doc_id, posting_date, document_create_date, due_in_date,
 				 invoice_currency, document_type, posting_id, total_open_amount, baseline_create_date, cust_payment_terms, invoice_id);
 		 
-		 System.out.println(cust_number);
-		 System.out.println(newInvo.getBaseline_create_date());
-		 System.out.println(newInvo.getBuisness_year());
-		 System.out.println(newInvo.getBusiness_code());
-		 System.out.println(newInvo.getClear_date());
-		 System.out.println(newInvo.getCust_number());
-		 System.out.println(newInvo.getCust_payment_terms());
-		 System.out.println(newInvo.getDoc_id());
-		 System.out.println(newInvo.getDocument_create_date());
-		 System.out.println(newInvo.getDocument_type());
-		 System.out.println(newInvo.getDue_in_date());
-		 System.out.println(newInvo.getInvoice_currency());
-		 System.out.println(newInvo.getInvoice_id());
-		 System.out.println(newInvo.getPosting_date());
-		 System.out.println(newInvo.getPosting_id());
-		 System.out.println(newInvo.getSl_no());
-		 System.out.println(newInvo.getTotal_open_amount());
+		 
 		 boolean isInserted = invoiceDao.insertInvoice(newInvo);
-		 System.out.println(isInserted);
 		 JSONresponse = gson.toJson(isInserted);
-	//	 System.out.println(JSONresponse);
+		 System.out.println(JSONresponse);
 	 }
 	 
 	 private void fetchInvoice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
@@ -155,8 +136,16 @@ public class InvoiceServlet extends HttpServlet {
 	 }
 	 
 	 private void deleteInvoice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-		 int sl_no = Integer.parseInt(request.getParameter("sl_no"));
-		 boolean isDeleted = invoiceDao.deleteInvoice(sl_no);
+		 String[] sl_no = (request.getParameter("sl_no")).split(",");
+		 int[] list = new int[sl_no.length];
+		 
+		 for(int a = 0; a < sl_no.length; a++) {
+			 list[a] = Integer.parseInt(sl_no[a]);
+		 }
+		 for(int x : list)
+			 System.out.println("this is int: "+x);
+		 
+		 boolean isDeleted = invoiceDao.deleteInvoice(list);
 		 JSONresponse = gson.toJson(isDeleted);
 	 }
 	 

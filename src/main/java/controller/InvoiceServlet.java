@@ -117,7 +117,6 @@ public class InvoiceServlet extends HttpServlet {
 		 
 		 boolean isInserted = invoiceDao.insertInvoice(newInvo);
 		 JSONresponse = gson.toJson(isInserted);
-		 System.out.println(JSONresponse);
 	 }
 	 
 	 private void fetchInvoice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
@@ -130,7 +129,7 @@ public class InvoiceServlet extends HttpServlet {
 		 int sl_no = Integer.parseInt(request.getParameter("sl_no"));
 		 String invoice_currency = request.getParameter("invoice_currency");
 		 String cust_payment_terms = request.getParameter("cust_payment_terms");
-		 
+		
 		 boolean isEdited = invoiceDao.editInvoice(sl_no, invoice_currency, cust_payment_terms);
 		 JSONresponse = gson.toJson(isEdited);
 	 }
